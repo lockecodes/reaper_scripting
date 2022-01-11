@@ -1,0 +1,7 @@
+/python
+/pip
+/UserScripts/UserScripts.egg-info/
+.DS_Store
+.idea/
+/bin
+**/__pycache__/
