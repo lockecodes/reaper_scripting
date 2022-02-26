@@ -17,17 +17,7 @@ def get_managed_fx_from_track(track: reapy.Track):
     raise ValueError("No managed preset for track")
 
 
-def get_preset(track_name: str, direction: str, project: reapy.Project = None):
-    project = project or get_project()
-    track = get_track_by_name(track_name=track_name, project=project)
-    fx = get_managed_fx_from_track(track)
-    if direction == "forward":
-        fx.use_next_preset()
-    elif direction == "back":
-        fx.use_previous_preset()
-    else:
-        # No-op for current
-        pass
+def set_preset(track_name: str, fx):
     # NOTE: Setting this at the global instead of project level because the api does not seem to return
     #       project level ext states from my testing
     reapy.set_ext_state(
@@ -36,6 +26,21 @@ def get_preset(track_name: str, direction: str, project: reapy.Project = None):
         value=fx.preset,
         persist=True,
     )
+
+
+def get_preset(track_name: str, direction: str, project: reapy.Project = None):
+    project = project or get_project()
+    track = get_track_by_name(track_name=track_name, project=project)
+    fx = get_managed_fx_from_track(track)
+    if direction == "forward":
+        fx.use_next_preset()
+        set_preset(track_name, fx)
+    elif direction == "back":
+        fx.use_previous_preset()
+        set_preset(track_name, fx)
+    else:
+        # No-op for current
+        set_preset(track_name, fx)
     return fx.preset
 
 

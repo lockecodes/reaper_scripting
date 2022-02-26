@@ -2,7 +2,6 @@ import csv
 import datetime
 import json
 import shutil
-from os import mkdir
 from pathlib import Path
 
 import pip
@@ -44,9 +43,16 @@ def get_kb_config():
 
 
 def backup_file(file_path: Path):
-    shutil.copyfile(
-        file_path, f"{file_path.absolute()}.{datetime.datetime.now().isoformat()}"
-    )
+    time_escaped = datetime.datetime.now().isoformat().replace(":", "-")
+    backup_path = Path(f"{file_path}.{time_escaped}")
+    try:
+        print(f"Backing up {file_path} to {backup_path}")
+        with open(file_path, "r") as src_fp:
+            source = src_fp.read()
+        with open(backup_path, "w") as dest_fp:
+            dest_fp.write(source)
+    except FileNotFoundError as e:
+        raise e
 
 
 def write_kb_config(kb_configs: list):
@@ -74,7 +80,7 @@ def write_config_json(config: dict, backup: bool = True):
 
 def init_config():
     try:
-        mkdir(REMOTE_PRESETS_DIR)
+        REMOTE_PRESETS_DIR.mkdir(parents=True, exist_ok=True, mode=0o777)
     except FileExistsError:
         pass
     try:
@@ -98,7 +104,7 @@ def generate_preset_files(config):
         except FileNotFoundError:
             pass
         try:
-            mkdir(preset_dir)
+            preset_dir.mkdir(parents=True, exist_ok=True, mode=0o777)
         except FileExistsError:
             pass
         with open(Path(preset_dir, "__init__.py"), "w") as fp:
@@ -213,3 +219,5 @@ def install():
 
 if __name__ == "__main__":
     install()
+    print(f"Config file path is: {PRESETS_CONFIG_FILE.absolute()}")
+

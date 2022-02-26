@@ -5,3 +5,4 @@ ReaRemotePresets.egg-info/
 .idea/
 /bin
 **/__pycache__/
+venv/
