@@ -29,7 +29,21 @@ the above will setup the needed files
 
 open the config file. the path is in the output of above
 add desired preset names to the preset list in the json file
-run python3 __init__.py again
+the file will initially just look like:
+```
+{
+  "presets": [],
+  "command_map": {}
+}
+```
+Just add the names of the presents (players names or instruments)
+```
+{
+  "presets": ["bass"],
+  "command_map": {}
+}
+```
+run python3 __init__.py again and it will create all the necessary scripts/folders and register them
 
 
 quit reaper again so the items show with the correct naming
