@@ -72,7 +72,7 @@ def read_config_json():
 
 
 def write_config_json(config: dict, backup: bool = True):
-    if backup:
+    if backup and PRESETS_CONFIG_FILE.exists():
         backup_file(PRESETS_CONFIG_FILE)
     with open(PRESETS_CONFIG_FILE, "w") as fp:
         return json.dump(config, fp=fp, indent=2)
